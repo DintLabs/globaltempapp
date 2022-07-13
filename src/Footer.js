@@ -4,7 +4,7 @@ import './Footer.css'
 function Footer() {
     return (
         <div className='footer'>
-            <p>© 2022 Global Temp Rights reserved</p>
+            <p>© 2022 Global Temp Housing, LLC.</p>
             <p>Privacy · Terms · Sitemap · Company Details</p>
         </div>
     )
