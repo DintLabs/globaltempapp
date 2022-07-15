@@ -1,32 +1,31 @@
-import React from 'react';
-import './App.css';
-import Home from './Home'
-import Header from './Header'
-import Footer from './Footer'
-import SearchPage from './SearchPage'
+import React from "react";
+import "./App.css";
+import Home from "./Home";
+import Header from "./Header";
+import Footer from "./Footer";
+import SearchPage from "./SearchPage";
+import { Box } from "@mui/material";
+import { Login, Register } from "pages/auth";
 
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-
     // BEM
-    <div className="app">
-      <Router>
+    <Box>
+      <BrowserRouter>
         <Header />
-        
-        <Switch>
-          <Route path="/search">
-            <SearchPage />
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch>
-        
+
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route index element={<Home />} />
+        </Routes>
+
         <Footer />
-      </ Router>
-    </div>
+      </BrowserRouter>
+    </Box>
   );
 }
 
