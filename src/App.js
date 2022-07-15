@@ -1,13 +1,12 @@
 import React from "react";
 import "./App.css";
-import Home from "./Home";
-import Header from "./Header";
-import Footer from "./Footer";
-import SearchPage from "./SearchPage";
+import Header from "components/layouts/header";
+import Footer from "components/layouts/footer";
 import { Box } from "@mui/material";
-import { Login, Register } from "pages/auth";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import routes from "routes";
 
 function App() {
   return (
@@ -17,10 +16,9 @@ function App() {
         <Header />
 
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/search" element={<SearchPage />} />
-          <Route index element={<Home />} />
+          {routes.map((route, i) => (
+            <Route key={i} path={route.path} element={route.element} />
+          ))}
         </Routes>
 
         <Footer />
