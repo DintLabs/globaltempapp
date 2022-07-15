@@ -39,7 +39,7 @@ const Title = styled(Typography)(() => ({
 const OtherLink = styled(Box)(() => ({
   textAlign: "center",
   marginBottom: "16px",
-  
+
   a: {
     textDecoration: 'none',
   }
@@ -91,7 +91,7 @@ const Login = () => {
           variant="contained"
           fullWidth
           onClick={() => logInWithEmailAndPassword(email, password)}
-          sx={{ mb: "16px" }}
+          sx={{ marginBottom: "16px" }}
         >
           Login
         </Button>
@@ -100,7 +100,7 @@ const Login = () => {
           fullWidth
           color="error"
           onClick={signInWithGoogle}
-          sx={{ mb: "16px" }}
+          sx={{ marginBottom: "16px" }}
         >
           Login with Google
         </Button>

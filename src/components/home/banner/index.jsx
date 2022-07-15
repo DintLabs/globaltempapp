@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import "./Banner.css";
+import "./index.css";
 import { Button } from "@material-ui/core";
-import Search from "./Search";
 import { useNavigate } from "react-router-dom";
+
+import Search from "components/home/search";
 
 function Banner() {
   const navigate = useNavigate();
