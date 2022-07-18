@@ -16,12 +16,14 @@ import {
   where,
   addDoc,
 } from "firebase/firestore";
+import { getDatabase } from 'firebase/database'
 
-import config from './config'
+import config from "./config";
 
 const app = initializeApp(config);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const dbReal = getDatabase(app);
 const googleProvider = new GoogleAuthProvider();
 const signInWithGoogle = async () => {
   try {
@@ -80,6 +82,7 @@ const logout = () => {
 export {
   auth,
   db,
+  dbReal,
   signInWithGoogle,
   logInWithEmailAndPassword,
   registerWithEmailAndPassword,

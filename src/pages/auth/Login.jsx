@@ -4,13 +4,7 @@ import { auth, logInWithEmailAndPassword, signInWithGoogle } from "firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 import { styled } from "@mui/material/styles";
-import {
-  Box,
-  Paper,
-  Button,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Paper, Button, TextField, Typography } from "@mui/material";
 
 const Wrapper = styled(Box)(() => ({
   width: "100%",
@@ -41,15 +35,17 @@ const OtherLink = styled(Box)(() => ({
   marginBottom: "16px",
 
   a: {
-    textDecoration: 'none',
-  }
-}))
+    textDecoration: "none",
+  },
+}));
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
+
+  console.log("error: ", error);
 
   useEffect(() => {
     if (loading) {
@@ -87,23 +83,25 @@ const Login = () => {
           />
         </Box>
 
-        <Button
-          variant="contained"
-          fullWidth
-          onClick={() => logInWithEmailAndPassword(email, password)}
-          sx={{ marginBottom: "16px" }}
-        >
-          Login
-        </Button>
-        <Button
-          variant="contained"
-          fullWidth
-          color="error"
-          onClick={signInWithGoogle}
-          sx={{ marginBottom: "16px" }}
-        >
-          Login with Google
-        </Button>
+        <Box sx={{ mb: "16px" }}>
+          <Button
+            variant="contained"
+            fullWidth
+            onClick={() => logInWithEmailAndPassword(email, password)}
+          >
+            Login
+          </Button>
+        </Box>
+        <Box sx={{ mb: "16px" }}>
+          <Button
+            variant="contained"
+            fullWidth
+            color="error"
+            onClick={signInWithGoogle}
+          >
+            Login with Google
+          </Button>
+        </Box>
 
         <OtherLink>
           <Link to="/reset">Forgot Password</Link>

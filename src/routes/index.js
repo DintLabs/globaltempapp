@@ -1,6 +1,7 @@
 import React from "react";
 import Home from "pages/home";
 import Search from "../SearchPage";
+import AddProduct from 'pages/products/AddProduct';
 import { Login, Register, Account } from "pages/auth";
 
 const routes = [
@@ -23,6 +24,10 @@ const routes = [
   {
     path: "search",
     element: <Search />,
+  },
+  {
+    path: "products/create",
+    element: <AddProduct />,
   },
 ];
 

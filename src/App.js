@@ -1,12 +1,13 @@
 import React from "react";
 import "./App.css";
-import Header from "components/layouts/header";
-import Footer from "components/layouts/footer";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Box } from "@mui/material";
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import routes from "routes";
+
+import Header from "components/layouts/header";
+import Footer from "components/layouts/footer";
+import NotFound from "pages/not-found";
 
 function App() {
   return (
@@ -19,6 +20,8 @@ function App() {
           {routes.map((route, i) => (
             <Route key={i} path={route.path} element={route.element} />
           ))}
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
 
         <Footer />
