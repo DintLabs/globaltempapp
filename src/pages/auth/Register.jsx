@@ -45,7 +45,7 @@ const Register = () => {
   const [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
 
-  console.log("user: ", user);
+  console.log("error: ", error);
 
   const register = () => {
     registerWithEmailAndPassword(email, password);
@@ -53,8 +53,8 @@ const Register = () => {
 
   useEffect(() => {
     if (loading) return;
-    if (user) navigate("/", { replace: true });
-  }, [user, loading]);
+    if (user) navigate("/account", { replace: true });
+  }, [user, loading, navigate]);
 
   return (
     <Wrapper>
@@ -83,24 +83,27 @@ const Register = () => {
             fullWidth
           />
         </Box>
-
-        <Button
-          variant="contained"
-          fullWidth
-          onClick={register}
-          sx={{ mb: "16px" }}
-        >
-          Register
-        </Button>
-        <Button
-          variant="contained"
-          fullWidth
-          color="error"
-          onClick={signInWithGoogle}
-          sx={{ mb: "16px" }}
-        >
-          Register with Google
-        </Button>
+        <Box sx={{ mb: "16px" }}>
+          <Button
+            variant="contained"
+            fullWidth
+            onClick={register}
+            sx={{ mb: "16px" }}
+          >
+            Register
+          </Button>
+        </Box>
+        <Box sx={{ mb: "16px" }}>
+          <Button
+            variant="contained"
+            fullWidth
+            color="error"
+            onClick={signInWithGoogle}
+            sx={{ mb: "16px" }}
+          >
+            Register with Google
+          </Button>
+        </Box>
 
         <OtherLink>
           Already have an account? <Link to="/">Login</Link> now.

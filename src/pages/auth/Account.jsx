@@ -1,37 +1,32 @@
-import React, { useEffect } from "react";
+import React from "react";
 
-import { useNavigate } from "react-router-dom";
-import { auth, logout } from "firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
-
-import { Box, Button } from "@mui/material";
+import { Box, Tabs, Tab } from "@mui/material";
+import Setting from "components/account/Setting";
+import Products from "components/account/Products";
 
 const Account = () => {
-  const [user, loading, error] = useAuthState(auth);
-  const navigate = useNavigate();
+  const [tab, setTab] = React.useState(1);
 
-  useEffect(() => {
-    if (loading) {
-      // maybe trigger a loading screen
-      return;
-    }
-    console.log("user: ", user);
-  }, [user, loading, navigate]);
-
-  const handleLogout = () => {
-    logout();
-    navigate("/login", { replace: true });
+  const handleChangeTab = (event, newValue) => {
+    setTab(newValue);
   };
 
   return (
     <Box sx={{ padding: "30px 60px" }}>
-      <p>ID: {(user && user.uid) || ""}</p>
-      <p>Name: {(user && user.displayName) || ""}</p>
-      <p>Email: {(user && user.email) || ""}</p>
+      <Box sx={{ width: "100%" }}>
+        <Tabs
+          value={tab}
+          onChange={handleChangeTab}
+          aria-label="wrapped label tabs example"
+        >
+          <Tab value={0} label="Setting" wrapped />
+          <Tab value={1} label="Products" />
+          <Tab value={2} label="Others" />
+        </Tabs>
 
-      <Button variant="contained" onClick={handleLogout}>
-        Logout
-      </Button>
+        {tab === 0 && <Setting />}
+        {tab === 1 && <Products />}
+      </Box>
     </Box>
   );
 };
