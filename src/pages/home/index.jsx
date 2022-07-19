@@ -39,6 +39,7 @@ function Home() {
             Object.entries(products).map(([key, item], i) => (
               <Grid item md={4} sx={12} key={i}>
                 <Card
+                  id={key}
                   src={item.image || ""}
                   title={item.title || ""}
                   description={item.description || ""}

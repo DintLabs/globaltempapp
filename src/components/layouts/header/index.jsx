@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./index.css";
 import SearchIcon from "@material-ui/icons/Search";
 import LanguageIcon from "@material-ui/icons/Language";
@@ -6,10 +6,22 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { Avatar, Menu, MenuItem, IconButton } from "@material-ui/core";
 import { Link, useNavigate } from "react-router-dom";
 
+import { auth, logout } from "firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+
 function Header() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
+  const [user, loading, error] = useAuthState(auth);
+
+  console.log("error: ", error);
+
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/login", { replace: true });
+    }
+  }, [user, loading, navigate]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -21,6 +33,11 @@ function Header() {
   const handleRedirect = (path) => {
     navigate(path, { replace: true });
     handleClose();
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
   };
 
   return (
@@ -35,7 +52,7 @@ function Header() {
       </div>
 
       <div className="header__right">
-        <p>Become a host</p>
+        <Link to="/products/create">Become a host</Link>
         <LanguageIcon />
         <ExpandMoreIcon />
         <IconButton
@@ -57,10 +74,20 @@ function Header() {
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={() => handleRedirect("/login")}>Login</MenuItem>
-        <MenuItem onClick={() => handleRedirect("/register")}>
-          Register
-        </MenuItem>
+        {!loading && !user && (
+          <MenuItem onClick={() => handleRedirect("/login")}>Login</MenuItem>
+        )}
+        {!loading && !user && (
+          <MenuItem onClick={() => handleRedirect("/register")}>
+            Register
+          </MenuItem>
+        )}
+        {!loading && user && (
+          <MenuItem onClick={() => handleRedirect("/account")}>
+            Account
+          </MenuItem>
+        )}
+        {!loading && user && <MenuItem onClick={handleLogout}>Logout</MenuItem>}
       </Menu>
     </div>
   );

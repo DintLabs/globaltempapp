@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
+import { v4 as uuidv4 } from "uuid";
 import { styled } from "@mui/material/styles";
 import { Box, TextField, Button, Card, Typography } from "@mui/material";
+import { MuiDateRangePicker } from "common/MuiDateRangePicker";
 
-import { dbReal } from "firebase";
-import { ref, set, get, onValue, push, child, update } from "firebase/database";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { dbReal, auth } from "firebase";
+import { ref, push, child, update } from "firebase/database";
 
 const Wrapper = styled(Box)(() => ({
   width: "100%",
@@ -26,13 +30,25 @@ const Title = styled(Typography)(() => ({
 
 const AddProduct = () => {
   const navigate = useNavigate();
+  const [user, loading, error] = useAuthState(auth);
+
+  console.log("user: ", user);
+  console.log("error: ", error);
+
   const [values, setValues] = useState({
     title: "",
-    price: 0,
+    price: null,
     description: "",
     date_expired: "",
     image: "",
   });
+  const [dateRange, setDateRange] = useState({});
+
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/login", { replace: true });
+    }
+  }, [user, loading, navigate]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -40,14 +56,22 @@ const AddProduct = () => {
   };
 
   const handleSubmit = async () => {
-    const newProductKey = push(child(ref(dbReal), "products")).key;
     const updates = {};
-    updates["/products/" + newProductKey] = values;
+    updates["/products/" + uuidv4()] = {
+      ...values,
+      date_expired: dateRange,
+      date_created: moment().format(),
+      // slug: uuidv4(),
+      user: {
+        uid: user.uid,
+        displayName: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+        accessToken: user.accessToken,
+      },
+    };
 
-    console.log("newProduct: ", newProductKey);
-
-    const response = await update(ref(dbReal), updates);
-    console.log("response: ", response);
+    await update(ref(dbReal), updates);
     navigate("/", { replace: true });
   };
 
@@ -78,6 +102,22 @@ const AddProduct = () => {
             onChange={handleChange}
             type="number"
             fullWidth
+          />
+        </Box>
+
+        <Box sx={{ mb: "16px" }}>
+          <MuiDateRangePicker
+            TextFieldProps={{
+              label: "Date Expired",
+              // helperText: "hello",
+              // error: true,
+              // variant: "outlined",
+              placeholder: "Date Expired",
+              fullWidth: true,
+            }}
+            fullWidth
+            dateRange={dateRange}
+            onDateRangeChange={setDateRange}
           />
         </Box>
 

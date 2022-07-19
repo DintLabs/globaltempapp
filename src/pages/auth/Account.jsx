@@ -18,6 +18,7 @@ const Account = () => {
           value={tab}
           onChange={handleChangeTab}
           aria-label="wrapped label tabs example"
+          sx={{ mb: "24px" }}
         >
           <Tab value={0} label="Setting" wrapped />
           <Tab value={1} label="Products" />

@@ -43,7 +43,7 @@ const Products = () => {
           Add Product
         </Button>
       </Box>
-      <ProductsList />
+      <ProductsList data={products} />
     </Wrapper>
   );
 };
