@@ -4,6 +4,7 @@ import Search from "../SearchPage";
 import AddProduct from "pages/products/AddProduct";
 import { Login, Register, Account } from "pages/auth";
 import ProductDetail from "pages/products/ProductDetail";
+import Book from "pages/products/Book";
 
 const routes = [
   {
@@ -29,6 +30,10 @@ const routes = [
   {
     path: "products/create",
     element: <AddProduct />,
+  },
+  {
+    path: "products/:id/booking",
+    element: <Book />,
   },
   {
     path: "products/:id",

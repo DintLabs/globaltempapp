@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
-import { Box, Container } from "@mui/material";
+import { Box, Container, Grid, Button } from "@mui/material";
 
 import { useAuthState } from "react-firebase-hooks/auth";
-import { dbReal, auth } from "firebase";
+import { dbReal, auth, storage } from "firebase";
 import { ref, onValue } from "firebase/database";
+import { ref as refStorage, getDownloadURL } from "firebase/storage";
 
 const Wrapper = styled(Box)(() => ({
   width: "100%",
@@ -18,10 +19,12 @@ const Content = styled(Container)(() => ({
 
 const ProductDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   console.log("id: ", id);
 
   const [user, loading, error] = useAuthState(auth);
   const [product, setProduct] = useState({});
+  const [imgSrc, setImgSrc] = useState(null);
 
   const getProductDetail = () => {
     const productsRef = ref(dbReal, "products/" + id);
@@ -35,16 +38,44 @@ const ProductDetail = () => {
     getProductDetail();
   }, [id]);
 
+  useEffect(() => {
+    if (product.photos) {
+      getDownloadURL(
+        refStorage(storage, product.photos[Object.keys(product.photos)[0]].name)
+      ).then((url) => {
+        setImgSrc(url);
+      });
+    }
+  }, [product]);
+
+  const handleBook = () => {
+    navigate(`/products/${id}/booking`, { replace: true });
+  };
+
   return (
     <Wrapper>
       <Content>
-        <p>ID: {id}</p>
-        <h3>{product.title || ""}</h3>
-        <Box sx={{ width: "200px" }}>
-          <img alt="" src={product.image || ""} style={{ width: "100%" }} />{" "}
-        </Box>
-        <p>Price: {product.price || ""}</p>
-        <p>Description: {product.description || ""}</p>
+        <Grid container spacing={4}>
+          <Grid item md={4} xs={12}>
+            <Box sx={{ width: "100%" }}>
+              <img alt="" src={imgSrc || ""} style={{ width: "100%" }} />{" "}
+            </Box>
+          </Grid>
+          <Grid item md={8} xs={12}>
+            <h2>{product.title || ""}</h2>
+            <h4 style={{ margin: "20px 0" }}>
+              Price: ${product.price || ""}{" "}
+              <span style={{ fontSize: "14px", color: "#666" }}>/night</span>
+            </h4>
+            <p>{product.description || ""}</p>
+
+            <Box sx={{ mt: "20px", textAlign: "center" }}>
+              <Button variant="contained" onClick={handleBook}>
+                Book Now
+              </Button>
+            </Box>
+          </Grid>
+        </Grid>
       </Content>
     </Wrapper>
   );

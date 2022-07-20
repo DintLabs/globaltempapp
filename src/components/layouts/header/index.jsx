@@ -15,14 +15,6 @@ function Header() {
   const navigate = useNavigate();
   const [user, loading, error] = useAuthState(auth);
 
-  console.log("error: ", error);
-
-  useEffect(() => {
-    if (!loading && !user) {
-      navigate("/login", { replace: true });
-    }
-  }, [user, loading, navigate]);
-
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };

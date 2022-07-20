@@ -16,17 +16,12 @@ function Home() {
   }, []);
 
   const getProducts = async () => {
-    console.log("getProducts");
-
     const productsRef = ref(dbReal, "products");
     onValue(productsRef, (snapshot) => {
       const data = snapshot.val();
-      console.log("data: ", data);
       setProducts(data);
     });
   };
-
-  console.log("products: ", products);
 
   return (
     <div className="home">
@@ -37,10 +32,10 @@ function Home() {
           {products &&
             Object.entries(products).length > 0 &&
             Object.entries(products).map(([key, item], i) => (
-              <Grid item md={4} sx={12} key={i}>
+              <Grid item md={4} sm={6} xs={12} key={i}>
                 <Card
                   id={key}
-                  src={item.image || ""}
+                  src={item.photos[Object.keys(item.photos)[0]] || ""}
                   title={item.title || ""}
                   description={item.description || ""}
                 />
