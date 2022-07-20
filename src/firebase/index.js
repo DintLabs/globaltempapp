@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { getStorage } from "firebase/storage";
 import {
   GoogleAuthProvider,
   getAuth,
@@ -16,7 +17,8 @@ import {
   where,
   addDoc,
 } from "firebase/firestore";
-import { getDatabase } from 'firebase/database'
+import { getDatabase } from "firebase/database";
+import { ref as refStorage, getDownloadURL } from "firebase/storage";
 
 import config from "./config";
 
@@ -24,7 +26,12 @@ const app = initializeApp(config);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const dbReal = getDatabase(app);
+const storage = getStorage(
+  app,
+  `gs://${process.env.REACT_APP_FIREBASE_STORAGE_BUCKET}`
+);
 const googleProvider = new GoogleAuthProvider();
+
 const signInWithGoogle = async () => {
   try {
     const res = await signInWithPopup(auth, googleProvider);
@@ -44,6 +51,7 @@ const signInWithGoogle = async () => {
     alert(err.message);
   }
 };
+
 const logInWithEmailAndPassword = async (email, password) => {
   try {
     await signInWithEmailAndPassword(auth, email, password);
@@ -52,6 +60,7 @@ const logInWithEmailAndPassword = async (email, password) => {
     alert(err.message);
   }
 };
+
 const registerWithEmailAndPassword = async (email, password) => {
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password);
@@ -67,6 +76,7 @@ const registerWithEmailAndPassword = async (email, password) => {
     alert(err.message);
   }
 };
+
 const sendPasswordReset = async (email) => {
   try {
     await sendPasswordResetEmail(auth, email);
@@ -76,16 +86,26 @@ const sendPasswordReset = async (email) => {
     alert(err.message);
   }
 };
+
 const logout = () => {
   signOut(auth);
 };
+
+const getURLImg = async (file) => {
+  const img = await getDownloadURL(refStorage(storage, file.name));
+  console.log('>>> img: ', img);
+  return img;
+};
+
 export {
   auth,
   db,
   dbReal,
+  storage,
   signInWithGoogle,
   logInWithEmailAndPassword,
   registerWithEmailAndPassword,
   sendPasswordReset,
   logout,
+  getURLImg,
 };

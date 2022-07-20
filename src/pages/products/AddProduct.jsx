@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
+import FileUpload from "react-material-file-upload";
 import { styled } from "@mui/material/styles";
 import { Box, TextField, Button, Card, Typography } from "@mui/material";
-import { MuiDateRangePicker } from "common/MuiDateRangePicker";
 
 import { useAuthState } from "react-firebase-hooks/auth";
-import { dbReal, auth } from "firebase";
-import { ref, push, child, update } from "firebase/database";
+import { dbReal, auth, storage } from "firebase";
+import { ref, update } from "firebase/database";
+import { uploadBytes, ref as refStorage } from "firebase/storage";
 
 const Wrapper = styled(Box)(() => ({
   width: "100%",
@@ -20,6 +21,7 @@ const Content = styled(Card)(() => ({
   margin: "60px auto",
   overflow: "hidden",
   padding: "30px",
+  boxSizing: "border-box",
 }));
 
 const Title = styled(Typography)(() => ({
@@ -31,18 +33,14 @@ const Title = styled(Typography)(() => ({
 const AddProduct = () => {
   const navigate = useNavigate();
   const [user, loading, error] = useAuthState(auth);
-
-  console.log("user: ", user);
-  console.log("error: ", error);
-
+  const [files, setFiles] = useState([]);
   const [values, setValues] = useState({
     title: "",
     price: null,
+    fee: null,
     description: "",
     date_expired: "",
-    image: "",
   });
-  const [dateRange, setDateRange] = useState({});
 
   useEffect(() => {
     if (!loading && !user) {
@@ -56,13 +54,28 @@ const AddProduct = () => {
   };
 
   const handleSubmit = async () => {
+    console.log("files: ", files, files.length);
+    let imgUpload = {};
+    if (files.length > 0) {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        console.log("file: ", file);
+        const storageRef = refStorage(storage, file.name);
+        await uploadBytes(storageRef, file).then((snapshot) => {
+          console.log("Uploaded a blob or file! ", snapshot);
+          imgUpload[uuidv4()] = snapshot.metadata;
+        });
+      }
+    }
+
+    console.log("imgUpload: ", imgUpload);
+
     const updates = {};
     updates["/products/" + uuidv4()] = {
       ...values,
-      date_expired: dateRange,
+      photos: JSON.parse(JSON.stringify(imgUpload)),
       date_created: moment().format(),
-      // slug: uuidv4(),
-      user: {
+      user_created: {
         uid: user.uid,
         displayName: user.displayName,
         email: user.email,
@@ -72,7 +85,7 @@ const AddProduct = () => {
     };
 
     await update(ref(dbReal), updates);
-    navigate("/", { replace: true });
+    navigate("/account", { replace: true });
   };
 
   return (
@@ -106,29 +119,14 @@ const AddProduct = () => {
         </Box>
 
         <Box sx={{ mb: "16px" }}>
-          <MuiDateRangePicker
-            TextFieldProps={{
-              label: "Date Expired",
-              // helperText: "hello",
-              // error: true,
-              // variant: "outlined",
-              placeholder: "Date Expired",
-              fullWidth: true,
-            }}
-            fullWidth
-            dateRange={dateRange}
-            onDateRangeChange={setDateRange}
-          />
-        </Box>
-
-        <Box sx={{ mb: "16px" }}>
           <TextField
             variant="standard"
-            name="image"
-            label="Image URL"
-            placeholder="Image URL"
-            value={values.image}
+            name="fee"
+            label="Fee"
+            placeholder="Fee"
+            value={values.fee}
             onChange={handleChange}
+            type="number"
             fullWidth
           />
         </Box>
@@ -145,6 +143,10 @@ const AddProduct = () => {
             multiline
             rows={4}
           />
+        </Box>
+
+        <Box sx={{ mb: "16px" }}>
+          <FileUpload value={files} accept="image/*" onChange={setFiles} />
         </Box>
 
         <Button variant="contained" fullWidth onClick={handleSubmit}>

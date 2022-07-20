@@ -1,11 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./index.css";
 import { Link } from "react-router-dom";
 
+import { storage } from "firebase";
+import { ref as refStorage, getDownloadURL } from "firebase/storage";
+
 function Card({ src, title, description, price, id }) {
+  const [imgSrc, setImgSrc] = useState(null);
+
+  useEffect(() => {
+    getDownloadURL(refStorage(storage, src.name)).then((url) => {
+      setImgSrc(url);
+    });
+  }, []);
+
   return (
     <div className="card">
-      <img src={src} alt="" />
+      {imgSrc && <img src={imgSrc} alt="" />}
       <div className="card__info">
         <h2>
           <Link to={`/products/${id}`}>{title}</Link>
