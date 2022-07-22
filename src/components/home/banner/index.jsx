@@ -11,11 +11,7 @@ function Banner() {
 
   return (
     <div className="banner">
-      <div className="banner__search">
-        {showSearch && <Search />}
-
-       
-      </div>
+    
       <div className="banner__info">
         <h1>Get out and stretch your imagination</h1>
         <h5>
