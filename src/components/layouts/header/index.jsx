@@ -38,10 +38,7 @@ function Header() {
         <img className="header__icon" src="./logo.png" alt="" />
       </Link>
 
-      <div className="header__center">
-        <input type="text" />
-        <SearchIcon />
-      </div>
+  
 
       <div className="header__right">
         <Link to="/products/create">Get Listed</Link>
