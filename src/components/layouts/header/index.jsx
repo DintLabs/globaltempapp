@@ -44,7 +44,7 @@ function Header() {
       </div>
 
       <div className="header__right">
-        <Link to="/products/create">Become a host</Link>
+        <Link to="/products/create">Get Listed</Link>
         <LanguageIcon />
         <ExpandMoreIcon />
         <IconButton
