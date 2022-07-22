@@ -42,8 +42,7 @@ function Header() {
 
       <div className="header__right">
         <Link to="/products/create">Get Listed</Link>
-        <LanguageIcon />
-        <ExpandMoreIcon />
+     
         <IconButton
           ria-controls={open ? "basic-menu" : undefined}
           aria-haspopup="true"
