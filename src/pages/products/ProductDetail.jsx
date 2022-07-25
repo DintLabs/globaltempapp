@@ -24,10 +24,10 @@ const ProductDetail = () => {
 
   const [user, loading, error] = useAuthState(auth);
   const [product, setProduct] = useState({});
-  const [imgSrc, setImgSrc] = useState(null);
+  const [imgSrc, setImgSrc] = useState([]);
 
   const getProductDetail = () => {
-    const productsRef = ref(dbReal, "products/" + id);
+    const productsRef = ref(dbReal, "listings/" + id);
     onValue(productsRef, (snapshot) => {
       const data = snapshot.val();
       setProduct(data);
@@ -40,11 +40,20 @@ const ProductDetail = () => {
 
   useEffect(() => {
     if (product.photos) {
-      getDownloadURL(
-        refStorage(storage, product.photos[Object.keys(product.photos)[0]].name)
-      ).then((url) => {
-        setImgSrc(url);
-      });
+      console.log("product.photos: ", product.photos);
+      let count = 0;
+      let photos = [];
+      for (let [key, value] of Object.entries(product.photos)) {
+        console.log(`${key}: ${value}`);
+        if (count < 5) {
+          getDownloadURL(refStorage(storage, value.name)).then((url) => {
+            console.log('url: ', url);
+            photos.push(url);
+            setImgSrc(imgSrc.concat(photos));
+          });
+        }
+        count++;
+      }
     }
   }, [product]);
 
@@ -55,13 +64,66 @@ const ProductDetail = () => {
   return (
     <Wrapper>
       <Content>
-        <Grid container spacing={4}>
-          <Grid item md={4} xs={12}>
+        <Grid container spacing={2}>
+          <Grid item md={6} xs={12}>
+            <Box sx={{ width: "100%" }}>
+              <img
+                alt=""
+                src={(imgSrc && imgSrc[0]) || ""}
+                style={{ width: "100%" }}
+              />{" "}
+            </Box>
+          </Grid>
+          <Grid item md={6} xs={12}>
+            <Grid container spacing={2}>
+              <Grid item md={6} xs={12}>
+                <Box sx={{ width: "100%" }}>
+                  <img
+                    alt=""
+                    src={(imgSrc && imgSrc[1]) || ""}
+                    style={{ width: "100%" }}
+                  />{" "}
+                </Box>
+              </Grid>
+
+              <Grid item md={6} xs={12}>
+                <Box sx={{ width: "100%" }}>
+                  <img
+                    alt=""
+                    src={(imgSrc && imgSrc[2]) || ""}
+                    style={{ width: "100%" }}
+                  />{" "}
+                </Box>
+              </Grid>
+
+              <Grid item md={6} xs={12}>
+                <Box sx={{ width: "100%" }}>
+                  <img
+                    alt=""
+                    src={(imgSrc && imgSrc[3]) || ""}
+                    style={{ width: "100%" }}
+                  />{" "}
+                </Box>
+              </Grid>
+
+              <Grid item md={6} xs={12}>
+                <Box sx={{ width: "100%" }}>
+                  <img
+                    alt=""
+                    src={(imgSrc && imgSrc[4]) || ""}
+                    style={{ width: "100%" }}
+                  />{" "}
+                </Box>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          {/* <Grid item md={4} xs={12}>
             <Box sx={{ width: "100%" }}>
               <img alt="" src={imgSrc || ""} style={{ width: "100%" }} />{" "}
             </Box>
-          </Grid>
-          <Grid item md={8} xs={12}>
+          </Grid> */}
+          <Grid item xs={12}>
             <h2>{product.title || ""}</h2>
             <h4 style={{ margin: "20px 0" }}>
               Price: ${product.price || ""}{" "}

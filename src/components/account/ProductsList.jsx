@@ -41,7 +41,7 @@ export default function ProductsList({ data }) {
 
   const handleDelete = (slug) => {
     // remove(ref(dbReal))
-    set(ref(dbReal, "products/" + slug), null)
+    set(ref(dbReal, "listings/" + slug), null)
       .then(() => {
         setOpen(true);
         setNotify({
