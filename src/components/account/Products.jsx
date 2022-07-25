@@ -24,7 +24,7 @@ const Products = () => {
   const getProducts = async () => {
     console.log("getProducts");
 
-    const productsRef = ref(dbReal, "products");
+    const productsRef = ref(dbReal, "listings");
     onValue(productsRef, (snapshot) => {
       const data = snapshot.val();
       console.log("data: ", data);

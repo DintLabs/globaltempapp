@@ -5,8 +5,8 @@ import { Box } from "@mui/material";
 
 import routes from "routes";
 
-import Header from "components/layouts/header";
-import Footer from "components/layouts/footer";
+import Header from "components/layouts/Header";
+import Footer from "components/layouts/Footer";
 import NotFound from "pages/not-found";
 
 function App() {

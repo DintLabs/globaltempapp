@@ -1,8 +1,24 @@
 import React from "react";
-
+import { styled } from "@mui/material/styles";
 import { Box, Tabs, Tab } from "@mui/material";
+
 import Setting from "components/account/Setting";
 import Products from "components/account/Products";
+
+const Wrapper = styled(Box)(({ theme }) => ({
+  width: "100%",
+  padding: "30px 60px",
+  boxSizing: "border-box",
+  overflow: "hidden",
+
+  [theme.breakpoints.down("md")]: {
+    padding: "30px 24px",
+  },
+
+  [theme.breakpoints.down("sm")]: {
+    padding: "30px 16px",
+  },
+}));
 
 const Account = () => {
   const [tab, setTab] = React.useState(1);
@@ -12,7 +28,7 @@ const Account = () => {
   };
 
   return (
-    <Box sx={{ padding: "30px 60px" }}>
+    <Wrapper>
       <Box sx={{ width: "100%" }}>
         <Tabs
           value={tab}
@@ -28,7 +44,7 @@ const Account = () => {
         {tab === 0 && <Setting />}
         {tab === 1 && <Products />}
       </Box>
-    </Box>
+    </Wrapper>
   );
 };
 

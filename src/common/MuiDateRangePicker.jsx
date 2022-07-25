@@ -17,9 +17,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const getMaxDate = (date) => {
+  if (!date) {
+    return date;
+  }
+  const startTime = new Date(date).getTime();
+  return new Date(startTime + 7 * 24 * 60 * 60 * 1000);
+};
+
+function disableRandomDates() {
+  return Math.random() > 0.7;
+}
+
 export const MuiDateRangePicker = (props) => {
   const classes = useStyles();
-
+  const [dateRange, setDateRange] = React.useState([null, null]);
+  const maxDate = React.useMemo(() => getMaxDate(dateRange[0]), [dateRange]);
   const [open, setOpen] = React.useState(false);
 
   const format = props.fomat ?? "yyyy-MM-dd";
@@ -73,6 +86,7 @@ export const MuiDateRangePicker = (props) => {
                 toggle();
               }}
               initialDateRange={props.dateRange}
+              maxDate={maxDate}
             />
           </div>
         </Fade>

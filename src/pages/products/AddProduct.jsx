@@ -4,7 +4,7 @@ import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
 import FileUpload from "react-material-file-upload";
 import { styled } from "@mui/material/styles";
-import { Box, TextField, Button, Card, Typography } from "@mui/material";
+import { Box, TextField, Button, Card, Typography, Alert,  } from "@mui/material";
 
 import { useAuthState } from "react-firebase-hooks/auth";
 import { dbReal, auth, storage } from "firebase";
@@ -41,6 +41,7 @@ const AddProduct = () => {
     description: "",
     date_expired: "",
   });
+  const [erorrs, setErorrs] = useState(null);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -53,10 +54,12 @@ const AddProduct = () => {
     setValues({ ...values, [name]: value });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
     console.log("files: ", files, files.length);
     let imgUpload = {};
-    if (files.length > 0) {
+    if (files.length > 4) {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         console.log("file: ", file);
@@ -66,92 +69,113 @@ const AddProduct = () => {
           imgUpload[uuidv4()] = snapshot.metadata;
         });
       }
+      console.log("imgUpload: ", imgUpload);
+
+      const updates = {};
+      updates["/listings/" + uuidv4()] = {
+        ...values,
+        photos: JSON.parse(JSON.stringify(imgUpload)),
+        date_created: moment().format(),
+        user_created: {
+          uid: user.uid,
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+          accessToken: user.accessToken,
+        },
+      };
+
+      await update(ref(dbReal), updates);
+      navigate("/account", { replace: true });
+    } else {
+      setErorrs({
+        message: "Please upload at least 5 images",
+      });
     }
-
-    console.log("imgUpload: ", imgUpload);
-
-    const updates = {};
-    updates["/products/" + uuidv4()] = {
-      ...values,
-      photos: JSON.parse(JSON.stringify(imgUpload)),
-      date_created: moment().format(),
-      user_created: {
-        uid: user.uid,
-        displayName: user.displayName,
-        email: user.email,
-        photoURL: user.photoURL,
-        accessToken: user.accessToken,
-      },
-    };
-
-    await update(ref(dbReal), updates);
-    navigate("/account", { replace: true });
   };
 
   return (
     <Wrapper>
       <Content>
-        <Title>Create Product</Title>
+        <form onSubmit={handleSubmit}>
+          <Title>Create Product</Title>
 
-        <Box sx={{ mb: "16px" }}>
-          <TextField
-            variant="standard"
-            name="title"
-            label="Title"
-            placeholder="Title"
-            value={values.title}
-            onChange={handleChange}
+          {erorrs && (
+            <Alert severity="error">
+              This is an error alert — check it out!
+            </Alert>
+          )}
+
+          <Box sx={{ mb: "16px" }}>
+            <TextField
+              variant="standard"
+              name="title"
+              label="Title"
+              placeholder="Title"
+              value={values.title}
+              onChange={handleChange}
+              fullWidth
+              required
+            />
+          </Box>
+
+          <Box sx={{ mb: "16px" }}>
+            <TextField
+              variant="standard"
+              name="price"
+              label="Price"
+              placeholder="Price"
+              value={values.price}
+              onChange={handleChange}
+              type="number"
+              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+              fullWidth
+              required
+            />
+          </Box>
+
+          <Box sx={{ mb: "16px" }}>
+            <TextField
+              variant="standard"
+              name="fee"
+              label="Fee"
+              placeholder="Fee"
+              value={values.fee}
+              onChange={handleChange}
+              type="number"
+              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+              fullWidth
+              required
+            />
+          </Box>
+
+          <Box sx={{ mb: "16px" }}>
+            <TextField
+              variant="standard"
+              name="description"
+              label="Description"
+              placeholder="Description"
+              value={values.description}
+              onChange={handleChange}
+              fullWidth
+              multiline
+              rows={4}
+            />
+          </Box>
+
+          <Box sx={{ mb: "16px" }}>
+            <FileUpload value={files} accept="image/*" onChange={setFiles} />
+          </Box>
+
+          <Button
+            type="submit"
+            variant="contained"
             fullWidth
-          />
-        </Box>
-
-        <Box sx={{ mb: "16px" }}>
-          <TextField
-            variant="standard"
-            name="price"
-            label="Price"
-            placeholder="Price"
-            value={values.price}
-            onChange={handleChange}
-            type="number"
-            fullWidth
-          />
-        </Box>
-
-        <Box sx={{ mb: "16px" }}>
-          <TextField
-            variant="standard"
-            name="fee"
-            label="Fee"
-            placeholder="Fee"
-            value={values.fee}
-            onChange={handleChange}
-            type="number"
-            fullWidth
-          />
-        </Box>
-
-        <Box sx={{ mb: "16px" }}>
-          <TextField
-            variant="standard"
-            name="description"
-            label="Description"
-            placeholder="Description"
-            value={values.description}
-            onChange={handleChange}
-            fullWidth
-            multiline
-            rows={4}
-          />
-        </Box>
-
-        <Box sx={{ mb: "16px" }}>
-          <FileUpload value={files} accept="image/*" onChange={setFiles} />
-        </Box>
-
-        <Button variant="contained" fullWidth onClick={handleSubmit}>
-          Submit
-        </Button>
+            disabled={files.length < 5}
+          >
+            Submit
+          </Button>
+        </form>
       </Content>
     </Wrapper>
   );
