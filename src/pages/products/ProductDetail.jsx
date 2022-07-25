@@ -12,9 +12,16 @@ const Wrapper = styled(Box)(() => ({
   width: "100%",
 }));
 
-const Content = styled(Container)(() => ({
+const Content = styled(Container)(({ theme }) => ({
   padding: "60px 0",
-  margin: "0 auto",
+
+  [theme.breakpoints.down("md")]: {
+    padding: "30px 24px",
+  },
+
+  [theme.breakpoints.down("sm")]: {
+    padding: "30px 16px",
+  },
 }));
 
 const ViewImage = styled(Box)(() => ({
