@@ -39,6 +39,10 @@ export default function ProductsList({ data }) {
     navigate(`/products/${slug}`, { replace: true });
   };
 
+  const handleEdit = (slug) => {
+    navigate(`/products/${slug}/update`, { replace: true });
+  };
+
   const handleDelete = (slug) => {
     // remove(ref(dbReal))
     set(ref(dbReal, "listings/" + slug), null)
@@ -101,7 +105,7 @@ export default function ProductsList({ data }) {
                   <IconButton onClick={() => handleView(key)}>
                     <VisibilityIcon />
                   </IconButton>
-                  <IconButton>
+                  <IconButton onClick={() => handleEdit(key)}>
                     <EditIcon />
                   </IconButton>
                   <IconButton onClick={() => handleDelete(key)}>

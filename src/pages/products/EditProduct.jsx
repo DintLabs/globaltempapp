@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
 import FileUpload from "react-material-file-upload";
+import Slider from "react-slick";
 import { styled } from "@mui/material/styles";
-import { Box, TextField, Button, Card, Typography, Alert,  } from "@mui/material";
+import { Box, TextField, Button, Card, Typography, Alert } from "@mui/material";
 
 import { useAuthState } from "react-firebase-hooks/auth";
 import { dbReal, auth, storage } from "firebase";
-import { ref, update } from "firebase/database";
-import { uploadBytes, ref as refStorage } from "firebase/storage";
+import { ref, update, onValue } from "firebase/database";
+import {
+  uploadBytes,
+  ref as refStorage,
+  getDownloadURL,
+} from "firebase/storage";
 
 const Wrapper = styled(Box)(() => ({
   width: "100%",
@@ -30,24 +35,85 @@ const Title = styled(Typography)(() => ({
   margin: "0 0 30px",
 }));
 
-const AddProduct = () => {
+const SlideItem = styled(Box)(() => ({
+  padding: "2px",
+  boxSizing: "border-box",
+
+  img: {
+    height: "80px",
+    width: "100%",
+  },
+}));
+
+const EditProduct = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const [user, loading, error] = useAuthState(auth);
   const [files, setFiles] = useState([]);
+  const [product, setProduct] = useState({});
   const [values, setValues] = useState({
     title: "",
-    price: null,
-    fee: null,
+    price: "",
+    fee: "",
     description: "",
     date_expired: "",
   });
   const [errors, setErrors] = useState(null);
+  const [photos, setPhotos] = useState([]);
+
+  const settings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 3,
+  };
 
   useEffect(() => {
     if (!loading && !user) {
       navigate("/login", { replace: true });
     }
   }, [user, loading, navigate]);
+
+  const getProductDetail = () => {
+    const productsRef = ref(dbReal, "listings/" + id);
+    onValue(productsRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data.title) {
+        setValues({
+          title: data.title,
+          description: data.description,
+          price: data.price,
+          fee: data.fee,
+        });
+      }
+
+      if (data.photos) {
+        let count = 0;
+        let images = [];
+        for (let [key, value] of Object.entries(data.photos)) {
+          if (count < 5) {
+            getDownloadURL(refStorage(storage, value.name)).then((url) => {
+              images.push(url);
+              setPhotos(photos.concat(images));
+            });
+          }
+          count++;
+        }
+      }
+      setProduct(data);
+    });
+  };
+
+  useEffect(() => {
+    getProductDetail();
+  }, [id]);
+
+  useEffect(() => {}, [product]);
+
+  console.log(">>> product: ", product);
+  console.log(">>> photos: ", photos);
+  console.log(">>> photos 0: ", photos[0]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -72,11 +138,12 @@ const AddProduct = () => {
       console.log("imgUpload: ", imgUpload);
 
       const updates = {};
-      updates["/listings/" + uuidv4()] = {
+      updates["/listings/" + id] = {
+        ...product,
         ...values,
         photos: JSON.parse(JSON.stringify(imgUpload)),
-        date_created: moment().format(),
-        user_created: {
+        date_updated: moment().format(),
+        user_updated: {
           uid: user.uid,
           displayName: user.displayName,
           email: user.email,
@@ -88,9 +155,23 @@ const AddProduct = () => {
       await update(ref(dbReal), updates);
       navigate("/account", { replace: true });
     } else {
-      setErrors({
-        message: "Please upload at least 5 images",
-      });
+      // update no changes photos
+      const updates = {};
+      updates["/listings/" + id] = {
+        ...product,
+        ...values,
+        date_updated: moment().format(),
+        user_updated: {
+          uid: user.uid,
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+          accessToken: user.accessToken,
+        },
+      };
+
+      await update(ref(dbReal), updates);
+      navigate("/account", { replace: true });
     }
   };
 
@@ -98,7 +179,7 @@ const AddProduct = () => {
     <Wrapper>
       <Content>
         <form onSubmit={handleSubmit}>
-          <Title>Create Product</Title>
+          <Title>Edit Product</Title>
 
           {errors && (
             <Alert severity="error">
@@ -128,7 +209,7 @@ const AddProduct = () => {
               value={values.price}
               onChange={handleChange}
               type="number"
-              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+              inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
               fullWidth
               required
             />
@@ -143,7 +224,7 @@ const AddProduct = () => {
               value={values.fee}
               onChange={handleChange}
               type="number"
-              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+              inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
               fullWidth
               required
             />
@@ -163,6 +244,21 @@ const AddProduct = () => {
             />
           </Box>
 
+          {photos.length > 4 && (
+            <Box sx={{ mb: "35px" }}>
+              <p>
+                <strong>Photos</strong>
+              </p>
+              <Slider {...settings}>
+                {photos.map((item) => (
+                  <SlideItem key={item}>
+                    <img alt="" src={item} />
+                  </SlideItem>
+                ))}
+              </Slider>
+            </Box>
+          )}
+
           <Box sx={{ mb: "16px" }}>
             <FileUpload value={files} accept="image/*" onChange={setFiles} />
           </Box>
@@ -171,7 +267,7 @@ const AddProduct = () => {
             type="submit"
             variant="contained"
             fullWidth
-            disabled={files.length < 5}
+            // disabled={files.length < 5}
           >
             Submit
           </Button>
@@ -181,4 +277,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default EditProduct;

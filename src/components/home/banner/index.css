@@ -7,11 +7,19 @@
 .banner__info {
     background-color: black;
     color: white;
-    padding-top: 25vh;
+    /* padding-top: 25vh;
     padding-left: 50px;
     padding-right: 50px;
-    padding-bottom: 40px;
-    width: 300px;
+    padding-bottom: 40px; */
+    display: inline-flex;
+    align-items: end;
+    max-width: 300px;
+    height: calc(100% + 30px);
+    padding: 30px;
+}
+
+.banner__info h2 {
+  margin-bottom: 16px;
 }
 
 .banner__search {
