@@ -23,6 +23,7 @@ const routes = [
   {
     path: "account",
     element: <Account />,
+    isPrivate: true,
   },
   {
     path: "search",
@@ -31,14 +32,17 @@ const routes = [
   {
     path: "products/create",
     element: <AddProduct />,
+    isPrivate: true,
   },
   {
     path: "products/:id/booking",
     element: <Book />,
+    isPrivate: true,
   },
   {
     path: "products/:id/update",
     element: <EditProduct />,
+    isPrivate: true,
   },
   {
     path: "products/:id",
