@@ -10,22 +10,17 @@ import {
   Container,
   Button,
   Grid,
-  TextField,
   Card,
   CardContent,
-  Typography,
   Divider,
 } from "@mui/material";
-import { MuiDateRangePicker } from "common/MuiDateRangePicker";
-// import { DateRangePicker } from 'rsuite'
 import { DateRange } from "react-date-range";
-import { addDays } from "date-fns";
+import { addDays, subDays } from "date-fns";
 
 import { useAuthState } from "react-firebase-hooks/auth";
 import { dbReal, auth, storage } from "firebase";
-import { ref, onValue, update, child } from "firebase/database";
+import { ref, onValue, update } from "firebase/database";
 import { ref as refStorage, getDownloadURL } from "firebase/storage";
-import BookPicker from "common/BookPicker";
 
 const Wrapper = styled(Box)(() => ({
   width: "100%",
@@ -33,6 +28,16 @@ const Wrapper = styled(Box)(() => ({
 
 const Content = styled(Container)(() => ({
   padding: "60px 0",
+}));
+
+const ViewImage = styled(Box)(() => ({
+  width: "100%",
+  height: "100%",
+
+  img: {
+    width: "100%",
+    height: "100%",
+  },
 }));
 
 const Value = styled(Box)(() => ({
@@ -49,8 +54,6 @@ const Value = styled(Box)(() => ({
   },
 }));
 
-const disabledDates = ["2022-07-12", "2022-07-25", "2022-07-29"];
-
 const Book = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -58,7 +61,6 @@ const Book = () => {
 
   const [user, loading, error] = useAuthState(auth);
   const [product, setProduct] = useState({});
-  const [dateRange, setDateRange] = useState({});
   const [totalDays, setTotalDays] = useState(0);
   const [priceWithDays, setPriceWithDays] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -73,25 +75,11 @@ const Book = () => {
   ]);
   const [booked, setBooked] = useState([]);
 
-  const getDaysArray = (start, end) => {
-   
-  };
-
-  console.log(">>> product: ", product);
-  console.log(">>> booked: ", booked);
   const getProductDetail = () => {
     const productsRef = ref(dbReal, "listings/" + id);
     onValue(productsRef, (snapshot) => {
       const data = snapshot.val();
 
-      setProduct(data);
-    });
-  };
-
-  const getDatesBooked = (productId) => {
-    const productsRef = ref(dbReal, "bookings/" + id);
-    onValue(productsRef, (snapshot) => {
-      const data = snapshot.val();
       setProduct(data);
     });
   };
@@ -118,11 +106,9 @@ const Book = () => {
     if (product.bookings) {
       let dates = [];
       for (let [key, value] of Object.entries(product.bookings)) {
-        console.log("key: ", key);
         const startDate = value.start_date;
         const endDate = value.end_date;
 
-        // const arr = [];
         for (
           const dt = new Date(startDate);
           dt <= new Date(endDate);
@@ -130,28 +116,10 @@ const Book = () => {
         ) {
           dates.push(new Date(dt));
         }
-
-        // const dates = getDaysArray(startDate, endDate);
-        // dates.concat(arr);
-        console.log(">>> arr: ", dates);
       }
-      console.log(">>> dates: ", dates);
       setBooked(booked.concat(dates));
     }
   }, [product]);
-
-  const handleChangeDate = (values) => {
-    console.log("values: ", values);
-    setDateRange(values);
-
-    const start = moment(values.startDate, "YYYY-MM-DD");
-    const end = moment(values.endDate, "YYYY-MM-DD");
-    const days = moment.duration(end.diff(start)).asDays();
-    console.log("days: ", days);
-    setPriceWithDays(Number(product.price) * days);
-    setTotalPrice(product.price * days + Number(product.fee));
-    setTotalDays(days);
-  };
 
   const handleChangeDates = (item) => {
     console.log("item: ", item);
@@ -196,54 +164,54 @@ const Book = () => {
       <Content>
         <Grid container spacing={2}>
           <Grid item md={6} xs={12}>
-            <Box sx={{ width: "100%" }}>
+            <ViewImage>
               <img
                 alt=""
                 src={(imgSrc && imgSrc[0]) || ""}
                 style={{ width: "100%" }}
               />{" "}
-            </Box>
+            </ViewImage>
           </Grid>
           <Grid item md={6} xs={12}>
             <Grid container spacing={2}>
               <Grid item md={6} xs={12}>
-                <Box sx={{ width: "100%" }}>
+                <ViewImage>
                   <img
                     alt=""
                     src={(imgSrc && imgSrc[1]) || ""}
                     style={{ width: "100%" }}
                   />{" "}
-                </Box>
+                </ViewImage>
               </Grid>
 
               <Grid item md={6} xs={12}>
-                <Box sx={{ width: "100%" }}>
+                <ViewImage>
                   <img
                     alt=""
                     src={(imgSrc && imgSrc[2]) || ""}
                     style={{ width: "100%" }}
                   />{" "}
-                </Box>
+                </ViewImage>
               </Grid>
 
               <Grid item md={6} xs={12}>
-                <Box sx={{ width: "100%" }}>
+                <ViewImage>
                   <img
                     alt=""
                     src={(imgSrc && imgSrc[3]) || ""}
                     style={{ width: "100%" }}
                   />{" "}
-                </Box>
+                </ViewImage>
               </Grid>
 
               <Grid item md={6} xs={12}>
-                <Box sx={{ width: "100%" }}>
+                <ViewImage>
                   <img
                     alt=""
                     src={(imgSrc && imgSrc[4]) || ""}
                     style={{ width: "100%" }}
                   />{" "}
-                </Box>
+                </ViewImage>
               </Grid>
             </Grid>
           </Grid>
@@ -265,13 +233,12 @@ const Book = () => {
             <Box sx={{ my: "16px" }}>
               <DateRange
                 onChange={handleChangeDates}
-                // showSelectionPreview={false}
-                // moveRangeOnFirstSelection={false}
-                // months={1}
+                minDate={subDays(new Date(), 7)}
                 ranges={booking}
                 direction="vertical"
                 scroll={{ enabled: true }}
                 disabledDates={booked}
+                disabledDay={(date) => date < subDays(new Date(), 1)}
                 // disabledDates={disabledDates.map((date) => new Date(date))}
                 // disabledDay={(date) => {
                 //   // console.log(">>> date: ", date);
