@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { Box, Tabs, Tab } from "@mui/material";
 
 import Setting from "components/account/Setting";
 import Products from "components/account/Products";
+
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "firebase";
 
 const Wrapper = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -21,7 +25,15 @@ const Wrapper = styled(Box)(({ theme }) => ({
 }));
 
 const Account = () => {
-  const [tab, setTab] = React.useState(1);
+  const navigate = useNavigate();
+  const [user, loading, error] = useAuthState(auth);
+  const [tab, setTab] = useState(1);
+
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/login", { replace: true });
+    }
+  }, [user, loading, navigate]);
 
   const handleChangeTab = (event, newValue) => {
     setTab(newValue);

@@ -25,7 +25,7 @@ function Home() {
 
   return (
     <div className="home">
-      {/* <Banner /> */}
+      <Banner />
 
       <Box sx={{ p: 4 }}>
         <Grid container spacing={4}>

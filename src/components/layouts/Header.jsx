@@ -62,15 +62,14 @@ const Header = () => {
     setAnchorElUser(null);
   };
 
-
   const handleRedirect = (path) => {
     navigate(path, { replace: true });
     handleCloseUserMenu();
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login", { replace: true });
+  const handleLogout = async () => {
+    await logout();
+    await navigate("/login", { replace: true });
   };
 
   return (
@@ -189,20 +188,24 @@ const Header = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-               {!loading && !user && (
-          <MenuItem onClick={() => handleRedirect("/login")}>Login</MenuItem>
-        )}
-        {!loading && !user && (
-          <MenuItem onClick={() => handleRedirect("/register")}>
-            Register
-          </MenuItem>
-        )}
-        {!loading && user && (
-          <MenuItem onClick={() => handleRedirect("/account")}>
-            Account
-          </MenuItem>
-        )}
-        {!loading && user && <MenuItem onClick={handleLogout}>Logout</MenuItem>}
+              {!loading && !user && (
+                <MenuItem onClick={() => handleRedirect("/login")}>
+                  Login
+                </MenuItem>
+              )}
+              {!loading && !user && (
+                <MenuItem onClick={() => handleRedirect("/register")}>
+                  Register
+                </MenuItem>
+              )}
+              {!loading && user && (
+                <MenuItem onClick={() => handleRedirect("/account")}>
+                  Account
+                </MenuItem>
+              )}
+              {!loading && user && (
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              )}
             </Menu>
           </Box>
         </Toolbar>

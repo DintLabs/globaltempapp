@@ -8,7 +8,7 @@ function Banner() {
 
   return (
     <div className="banner">
-      <div className="banner__info">
+      {/* <div className="banner__info">
         <div className="content">
           <h2>Get out and stretch your imagination</h2>
           <h5>
@@ -16,7 +16,7 @@ function Banner() {
             you.
           </h5>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
