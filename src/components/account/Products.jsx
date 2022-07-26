@@ -15,15 +15,12 @@ const Products = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
 
-  console.log("products: ", products);
 
   useEffect(() => {
     getProducts();
   }, []);
 
   const getProducts = async () => {
-    console.log("getProducts");
-
     const productsRef = ref(dbReal, "listings");
     onValue(productsRef, (snapshot) => {
       const data = snapshot.val();

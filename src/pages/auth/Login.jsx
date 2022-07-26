@@ -45,14 +45,14 @@ const Login = () => {
   const [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
 
-  console.log("error: ", error);
+  console.log("user, loading, error: ", user, loading, error);
 
   useEffect(() => {
     if (loading) {
       // maybe trigger a loading screen
       return;
     }
-    if (user) navigate("/account", { replace: true });
+    if (user && !loading) navigate("/account", { replace: true });
   }, [user, loading, navigate]);
 
   return (

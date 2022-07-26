@@ -69,11 +69,11 @@ const EditProduct = () => {
     slidesToScroll: 3,
   };
 
-  useEffect(() => {
-    if (!loading && !user) {
-      navigate("/login", { replace: true });
-    }
-  }, [user, loading, navigate]);
+  // useEffect(() => {
+  //   if (!loading && !user) {
+  //     navigate("/login", { replace: true });
+  //   }
+  // }, [user, loading, navigate]);
 
   const getProductDetail = () => {
     const productsRef = ref(dbReal, "listings/" + id);
@@ -109,11 +109,13 @@ const EditProduct = () => {
     getProductDetail();
   }, [id]);
 
-  useEffect(() => {}, [product]);
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/login", { replace: true });
+    }
+  }, [user, loading, navigate]);
 
   console.log(">>> product: ", product);
-  console.log(">>> photos: ", photos);
-  console.log(">>> photos 0: ", photos[0]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;

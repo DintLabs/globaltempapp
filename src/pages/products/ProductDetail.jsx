@@ -51,6 +51,12 @@ const ProductDetail = () => {
   };
 
   useEffect(() => {
+    if (!loading && !user) {
+      navigate("/login", { replace: true });
+    }
+  }, [user, loading, navigate]);
+
+  useEffect(() => {
     getProductDetail();
   }, [id]);
 

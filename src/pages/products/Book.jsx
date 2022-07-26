@@ -93,6 +93,12 @@ const Book = () => {
   };
 
   useEffect(() => {
+    if (!loading && !user) {
+      navigate("/login", { replace: true });
+    }
+  }, [user, loading, navigate]);
+
+  useEffect(() => {
     getProductDetail();
   }, [id]);
 
