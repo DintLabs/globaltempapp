@@ -1,0 +1,82 @@
+.checkOutD::before {
+  content: "";
+  background: #e7e7e7;
+  position: absolute;
+  height: 100%;
+  right: 0px;
+  top: 0;
+  width: 1px;
+}
+.marTop {
+  margin-top: 20px;
+}
+.marTop10 {
+  margin-top: 10px;
+}
+.borderTop {
+  border-top: 1px solid #e7e7e7;
+}
+.paddingTop {
+  padding-top: 15px;
+}
+.divLeft {
+  border: 1px solid #dbd2d2;
+  padding: 15px;
+}
+.divRight {
+  border: 1px solid #dbd2d2;
+  padding: 15px;
+}
+.space_between {
+  display: flex;
+  justify-content: space-between;
+}
+.bracketGrey {
+  color: #6b6b6b;
+  font-size: 12px;
+}
+.padding {
+  padding: 7px;
+}
+.bg {
+  background-color: #ebf3ff;
+}
+.greenFont {
+  color: #008009;
+  font-size: 14px;
+}
+.font23dark {
+  font-size: 22px;
+  font-weight: 700;
+}
+.bluebox {
+  width: 20px;
+  background-color: #003580;
+  color: white;
+  padding: 5px;
+  border-radius: 4.36364px 4.36364px 4.36364px 0;
+}
+.borderBlack {
+  border: 1px solid black;
+  width: 20%;
+  font-size: 12px;
+  text-align: center;
+}
+.greenBox {
+  background-color: #d2edd5;
+  padding: 0.4em 0.8em;
+  font-weight: normal;
+  width: 35%;
+  color: #006607;
+}
+.labelFont {
+  font-size: 14px;
+  font-weight: 700;
+}
+.input {
+  padding: 5px 10px;
+}
+.selectbox {
+  padding: 5px;
+  border-radius: 5px;
+}

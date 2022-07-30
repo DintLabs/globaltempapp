@@ -149,28 +149,29 @@ const Book = () => {
   };
 
   const handleSubmit = async () => {
-    const updates = {};
-    updates[`/listings/${id}/bookings/${uuidv4()}`] = {
-      // updates["/bookings/" + uuidv4()] = {
-      // product,
-      product_id: id,
-      total_price: totalPrice,
-      days: totalDays,
-      start_date: booking[0].startDate,
-      end_date: booking[0].endDate,
-      status: "pending",
-      date_created: moment().format(),
-      user_book: {
-        uid: user.uid,
-        displayName: user.displayName,
-        email: user.email,
-        photoURL: user.photoURL,
-        accessToken: user.accessToken,
-      },
-    };
+    // const updates = {};
+    // updates[`/listings/${id}/bookings/${uuidv4()}`] = {
+    //   // updates["/bookings/" + uuidv4()] = {
+    //   // product,
+    //   product_id: id,
+    //   total_price: totalPrice,
+    //   days: totalDays,
+    //   start_date: booking[0].startDate,
+    //   end_date: booking[0].endDate,
+    //   status: "pending",
+    //   date_created: moment().format(),
+    //   user_book: {
+    //     uid: user.uid,
+    //     displayName: user.displayName,
+    //     email: user.email,
+    //     photoURL: user.photoURL,
+    //     accessToken: user.accessToken,
+    //   },
+    // };
 
-    await update(ref(dbReal), updates);
-    navigate("/", { replace: true });
+    // await update(ref(dbReal), updates);
+    navigate(`/ClientDetails/${id}`, { replace: true });
+    console.log("hello");
   };
 
   return (
