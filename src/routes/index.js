@@ -6,6 +6,7 @@ import EditProduct from "pages/products/EditProduct";
 import { Login, Register, Account } from "pages/auth";
 import ProductDetail from "pages/products/ProductDetail";
 import Book from "pages/products/Book";
+import ClientDetails from "pages/booking/ClientDetails";
 
 const routes = [
   {
@@ -47,6 +48,10 @@ const routes = [
   {
     path: "products/:id",
     element: <ProductDetail />,
+  },
+  {
+    path: "ClientDetails/:id",
+    element: <ClientDetails />,
   },
 ];
 

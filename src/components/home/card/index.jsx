@@ -13,13 +13,21 @@ function Card({ src, title, description, price, id }) {
       setImgSrc(url);
     });
   }, []);
-
+  // {`/products/${id}`}
   return (
     <div className="card">
       {imgSrc && <img src={imgSrc} alt="" />}
       <div className="card__info">
         <h2>
-          <Link to={`/products/${id}`}>{title}</Link>
+          <Link
+            to={
+              title == "ISLAND HUT (Kubo) OVERLOOKING - LAKE SIERRA WATERS"
+                ? `/products/${id}/booking`
+                : `/products/${id}`
+            }
+          >
+            {title}
+          </Link>
         </h2>
         <h4>{description}</h4>
         <h3>{price}</h3>
