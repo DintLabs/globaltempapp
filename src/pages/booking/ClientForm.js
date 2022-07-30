@@ -170,14 +170,22 @@ const ClientForm = () => {
         <p className="bracketGrey marTop10">Time is for New Delhi time zone</p>
       </div>
       <div
-        className="divRight marTop "
-        style={{
-          justifyContent: "center",
-          display: "flex",
-          flexDirection: "column",
-        }}
+        className="divRightButton marTop "
+        style={
+          {
+            //   justifyContent: "center",
+            //   display: "flex",
+            //   flexDirection: "column",
+          }
+        }
       >
-        <div style={{ display: "flex" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
+        >
           <p
             style={{
               display: "flex",

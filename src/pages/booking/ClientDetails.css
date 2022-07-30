@@ -27,6 +27,9 @@
   border: 1px solid #dbd2d2;
   padding: 15px;
 }
+.divRightButton {
+  padding: 15px;
+}
 .space_between {
   display: flex;
   justify-content: space-between;
