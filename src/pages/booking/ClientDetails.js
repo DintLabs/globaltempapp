@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./ClientDetails.css";
 import hotelImg from "assets/images/hotel.jpg";
 import StarRatings from "react-star-ratings";
@@ -7,10 +7,35 @@ import CheckCircleOutline from "@material-ui/icons/CheckCircleOutline";
 import HelpOutline from "@material-ui/icons/HelpOutline";
 import PermIdentityOutlined from "@material-ui/icons/PermIdentityOutlined";
 import ClientForm from "./ClientForm";
-
+import ClientFormPart2 from "./ClientFormPart2";
+import { useLocation } from "react-router-dom";
+import { ref as refStorage, getDownloadURL } from "firebase/storage";
+import { dbReal, auth, storage } from "firebase";
+import Moment from "react-moment";
 const ClientDetails = () => {
+  const { state } = useLocation();
+  console.log(state);
+  const [data, setData] = useState(state.product);
+  const [data1, setData1] = useState(state);
+  const [open, setOpen] = useState(false);
+  const [imgSrc, setImgSrc] = useState([]);
+  useEffect(() => {
+    if (data.photos) {
+      let count = 0;
+      let photos = [];
+      for (let [key, value] of Object.entries(data.photos)) {
+        if (count < 5) {
+          getDownloadURL(refStorage(storage, value.name)).then((url) => {
+            photos.push(url);
+            setImgSrc(imgSrc.concat(photos));
+          });
+        }
+        count++;
+      }
+    }
+  }, [data]);
   return (
-    <div>
+    <div className="fontSize css-apenfw-MuiContainer-root">
       <div
         style={{
           display: "flex",
@@ -26,27 +51,36 @@ const ClientDetails = () => {
         >
           <div className="divLeft 1">
             <h4>Your booking details</h4>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginTop: "15px",
-              }}
-            >
+            <div className="flex marTop notFlex">
               <div className="checkOutD" style={{ position: "relative" }}>
-                <ul style={{ listStyle: "none", padding: "0px 40px 0px 0px" }}>
+                <ul
+                  className="paddOut"
+                  style={{ listStyle: "none", padding: "0px 40px 0px 0px" }}
+                >
                   <li>Check-in</li>
                   <li>
-                    <h4>Wed, Aug 10, 2022</h4>
+                    <h4>
+                      {" "}
+                      <Moment format="dddd, MMMM Do YYYY">
+                        {data1.start_date}
+                      </Moment>
+                    </h4>
                   </li>
                   <li style={{ color: "#6b6b6b" }}>From 3:00 PM</li>
                 </ul>
               </div>
-              <div>
-                <ul style={{ listStyle: "none", padding: "0px 0px 0px 10px" }}>
+              <div className="checkOutD">
+                <ul
+                  className="paddOut"
+                  style={{ listStyle: "none", padding: "0px 0px 0px 10px" }}
+                >
                   <li>Check-out</li>
                   <li>
-                    <h4>Fri, Aug 12, 2022</h4>
+                    <h4>
+                      <Moment format="dddd, MMMM Do YYYY">
+                        {data1.end_date}
+                      </Moment>
+                    </h4>
                   </li>
                   <li style={{ color: "#6b6b6b" }}>Until 12:00 PM</li>
                 </ul>
@@ -54,43 +88,97 @@ const ClientDetails = () => {
             </div>
             <div className="marTop">
               <span>
-                Total length of stay: <h4>2 nights</h4>
+                Total length of stay: <h4>{data1.days} nights</h4>
               </span>
             </div>
-            <div className="marTop borderTop paddingTop">
-              <h4>You selected:</h4>
-              <span>1 King Bed, City View, Aloft Room</span>
-              <h4 style={{ color: "#0071c2", marginTop: "10px" }}>
-                Change your Selection
-              </h4>
-            </div>
-          </div>
-          <div className="divLeft 2 marTop bg">
-            <div className="padding">
-              <h4 className="space_between">
-                <span>Price</span>
-                <span>₹ 13,000</span>
-              </h4>
-              <span className="bracketGrey">(for 2 guests and 2 nights)</span>
-            </div>
-          </div>
-          <div className="divLeft 3">
-            <div className="padding">
-              <h4>Excluded charges</h4>
-              <div className="space_between">
-                <span>Goods & services tax</span>
-                <span>₹ 1,560</span>
+            {open == false ? (
+              <div className="marTop borderTop paddingTop">
+                <h4>You selected:</h4>
+                <span>1 King Bed, City View, Aloft Room</span>
+                <h4 style={{ color: "#0071c2", marginTop: "10px" }}>
+                  Change your Selection
+                </h4>
               </div>
-            </div>
+            ) : null}
           </div>
-          <div className="divLeft 4 marTop">
-            <div className="padding">
-              <h4>Your payment schedule</h4>
-              <div className="greenFont marTop">
-                No payment today. You'll pay when you stay.
+
+          {open == false ? (
+            <>
+              <div className="divLeft 2 marTop bg">
+                <div className="padding">
+                  <h4 className="space_between">
+                    <span>Price</span>
+                    <span>$ {data1.priceWithDays}</span>
+                  </h4>
+                  <span className="bracketGrey">
+                    (for 2 guests and {data1.days} nights)
+                  </span>
+                </div>
               </div>
-            </div>
-          </div>
+              <div className="divLeft 3">
+                <div className="padding">
+                  <h4>Excluded charges</h4>
+                  <div className="space_between">
+                    <span>Goods & services tax</span>
+                    <span>$ 1,560</span>
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="divLeft 3 marTop">
+                <div className="padding">
+                  <h4 className="">Your Price Summary</h4>
+                  <div className="space_between marTop">
+                    <span>Studio</span>
+                    <span>$ 1,560</span>
+                  </div>
+                  <div className="space_between">
+                    <span>13 % Tax</span>
+                    <span>$ 1,560</span>
+                  </div>
+                </div>
+              </div>
+              <div className="divLeft 2  bg">
+                <div className="padding">
+                  <h4 className="space_between">
+                    <span>Price</span>
+                    <span>$ 13,000</span>
+                  </h4>
+                  <span className="bracketGrey">
+                    (for 2 guests and 2 nights)
+                  </span>
+                </div>
+              </div>
+            </>
+          )}
+          {open == false ? (
+            <>
+              <div className="divLeft 4 marTop">
+                <div className="padding">
+                  <h4>Your payment schedule</h4>
+                  <div className="greenFont marTop">
+                    No payment today. You'll pay when you stay.
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              {" "}
+              <div className="divLeft 4 marTop">
+                <div className="padding">
+                  <h4>Your payment schedule</h4>
+                  <div className="space_between marTop">
+                    <span> before you stay you'll pay</span>
+                    <span>$ 569.90</span>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+
           <div className="divLeft 5 marTop">
             <div className="padding">
               <h4>How much will it cost to cancel?</h4>
@@ -102,10 +190,36 @@ const ClientDetails = () => {
                 style={{ fontSize: "15px", marginTop: "10px" }}
               >
                 <span>From 12:00 AM on Aug 10</span>
-                <span>₹ 6,300</span>
+                <span>$ 6,300</span>
               </div>
             </div>
           </div>
+          {open == true ? (
+            <>
+              <div className="divLeft 4 marTop">
+                <div className="padding">
+                  <h4>Do you have a promo code?</h4>
+                  <div className="marTop10 ">
+                    <p className="labelFont ">Enter your promo code</p>
+                    <input type="text" className="input " />
+                    <div className="marTop10 ">
+                      <button
+                        style={{
+                          padding: "10px 25px",
+                          backgroundColor: "white",
+                          color: "#0071c2",
+                          border: "1px solid #0071c2",
+                        }}
+                      >
+                        Apply
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : null}
+
           <div className="divLeft 6 marTop">
             <div className="padding">
               <h4>The fine print</h4>
@@ -140,7 +254,7 @@ const ClientDetails = () => {
         <div style={{ width: "68.5%", padding: "10px" }}>
           <div className="divRight 1 space_between">
             <div style={{ width: "20%" }}>
-              <img src={hotelImg} alt="image" width="100%" />
+              <img src={(imgSrc && imgSrc[0]) || ""} alt="image" width="100%" />
             </div>
             <div style={{ width: "78%" }}>
               <div style={{ display: "flex", gap: "2%" }}>
@@ -168,7 +282,7 @@ const ClientDetails = () => {
                   <ThumbUpAlt style={{ color: "#febb02" }} />
                 </span>
               </div>
-              <h4 className="font23dark ">Aloft New Delhi Aerocity</h4>
+              <h4 className="font23dark ">{data.title}</h4>
               <p className="marTop10">
                 No. 5B, Aerocity, 110037 New Delhi, India
               </p>
@@ -184,13 +298,7 @@ const ClientDetails = () => {
                   . 2,198 reviews
                 </span>
               </div>
-              <div
-                className="marTop10"
-                style={{
-                  display: "flex",
-                  gap: "2%",
-                }}
-              >
+              <div className="marTop10 parkRes">
                 <div className="borderBlack">Free parking</div>
                 <div className="borderBlack">4 Restaurants On Site</div>
               </div>
@@ -232,7 +340,13 @@ const ClientDetails = () => {
               bookings on the go!
             </p>
           </div>
-          <ClientForm />
+          {open == false ? (
+            <ClientForm setOpen={setOpen} />
+          ) : (
+            <ClientFormPart2 setOpen={setOpen} />
+          )}
+
+          {/* <ClientFormPart2 /> */}
         </div>
       </div>
     </div>

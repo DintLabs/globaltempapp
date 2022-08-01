@@ -170,7 +170,30 @@ const Book = () => {
     // };
 
     // await update(ref(dbReal), updates);
-    navigate(`/ClientDetails/${id}`, { replace: true });
+    navigate(`/ClientDetails/${id}`, {
+      state: {
+        // updates["/bookings/" + uuidv4()] = {
+        // product,
+        priceWithDays: priceWithDays,
+        totalDays: totalDays,
+        totalPrice: totalPrice,
+        product_id: id,
+        product: product,
+        total_price: totalPrice,
+        days: totalDays,
+        start_date: booking[0].startDate,
+        end_date: booking[0].endDate,
+        status: "pending",
+        date_created: moment().format(),
+        user_book: {
+          uid: user.uid,
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+          accessToken: user.accessToken,
+        },
+      },
+    });
     console.log("hello");
   };
 
@@ -283,7 +306,7 @@ const Book = () => {
                   <p>Total before taxes</p>
                   <h4>${totalPrice.toLocaleString()}</h4>
                 </Value>
-
+                {console.log(product, "jjjjjj")}
                 <Box sx={{ mb: "15px" }}>
                   <Button
                     fullWidth

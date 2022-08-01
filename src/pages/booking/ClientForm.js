@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import CheckCircleOutline from "@material-ui/icons/CheckCircleOutline";
 import HelpOutline from "@material-ui/icons/HelpOutline";
 import HourglassEmpty from "@material-ui/icons/HourglassEmpty";
 import LocalOfferIcon from "@material-ui/icons/LocalOfferOutlined";
-const ClientForm = () => {
+
+const ClientForm = ({ setOpen }) => {
   return (
     <form>
       <div className="divRight 4 marTop bg">
@@ -21,18 +22,27 @@ const ClientForm = () => {
           <input type="radio" name="" id="" />
           &nbsp; No
         </p>
-        <div className="marTop10 " style={{ display: "flex", gap: "2%" }}>
+        <div
+          className="marTop10 notFlex"
+          style={{ display: "flex", gap: "2%" }}
+        >
           <div>
-            <p className="labelFont">First Name *</p>
+            <p className="labelFont">
+              First Name <span style={{ color: "red" }}>*</span>
+            </p>
             <input type="text" className="input" />
           </div>
           <div>
-            <p className="labelFont">Last Name *</p>
+            <p className="labelFont">
+              Last Name <span style={{ color: "red" }}>*</span>
+            </p>
             <input type="text" className="input" />
           </div>
         </div>
         <div className="marTop10 ">
-          <p className="labelFont">Email Address *</p>
+          <p className="labelFont">
+            Email Address <span style={{ color: "red" }}>*</span>
+          </p>
           <input
             type="text"
             className="input"
@@ -43,7 +53,9 @@ const ClientForm = () => {
           </p>
         </div>
         <div className="marTop10 ">
-          <p className="labelFont">Confirm Email Address *</p>
+          <p className="labelFont">
+            Confirm Email Address <span style={{ color: "red" }}>*</span>
+          </p>
           <input type="text" className="input" />
         </div>
         <div className="marTop10 ">
@@ -70,7 +82,10 @@ const ClientForm = () => {
           </span>
           <p style={{ color: "rgb(0, 128, 9)", fontSize: "13px" }}>
             {" "}
-            <span style={{ fontWeight: "700", fontSize: "15px" }}>
+            <span
+              className="fontSize"
+              style={{ fontWeight: "700", fontSize: "15px" }}
+            >
               Free cancellation
             </span>{" "}
             until 11:59 PM on August 9, 2022
@@ -161,7 +176,10 @@ const ClientForm = () => {
           </span>
         </div>
         <div className="marTop10 ">
-          <p className="labelFont">Add your estimated arrival time *</p>
+          <p className="labelFont">
+            Add your estimated arrival time{" "}
+            <span style={{ color: "red" }}>*</span>
+          </p>
           <select defaultValue="Please Select" className="selectbox">
             <option value="1">Please Select</option>
             <option value="2">2</option>
@@ -189,10 +207,10 @@ const ClientForm = () => {
           <p
             style={{
               display: "flex",
-              width: "18%",
               color: "#0071c2",
               fontSize: "15px",
               fontWeight: "400",
+              marginRight: "10px",
             }}
           >
             <span>
@@ -208,10 +226,23 @@ const ClientForm = () => {
               backgroundColor: "#0071c2",
               border: "none",
             }}
+            onClick={() => setOpen(true)}
           >
             Next: Final details
           </button>
         </div>
+        <p
+          style={{
+            color: "#0071c2",
+            textDecorationLine: "underline",
+            textAlign: "right",
+            fontSize: "14px",
+            fontWeight: "700",
+          }}
+          className="marTop10"
+        >
+          What are my booking conditions?
+        </p>
       </div>
     </form>
   );
