@@ -13,7 +13,7 @@ const ClientFormPart2 = ({ setOpen }) => {
           Almost done! Just fill in the <span style={{ color: "red" }}>*</span>{" "}
           required info
         </div>
-        <div className="space_between">
+        <div className="space_between box_changeInfo">
           <div>
             <div className="marTop10 ">
               <p className="labelFont">

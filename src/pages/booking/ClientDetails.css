@@ -96,6 +96,9 @@
   /* .checkOutD {
     font-size: 12px;
   } */
+  span {
+    font-size: 12px;
+  }
   .fontSize {
     font-size: 12px;
   }
@@ -107,6 +110,15 @@
   }
 }
 @media screen and (max-width: 696px) {
+  .img {
+    flex-direction: column;
+  }
+  .imgDiv {
+    width: 100% !important;
+  }
+  .content1Right {
+    width: 100% !important;
+  }
   .notFlex {
     flex-direction: column;
   }
@@ -115,5 +127,56 @@
   }
   .paddOut {
     padding: 0px !important;
+  }
+}
+@media screen and (max-width: 500px) {
+  .box_changeInfo {
+    flex-direction: column-reverse;
+    margin-top: 10px;
+  }
+  .main {
+    flex-direction: column;
+  }
+  .fullWidth {
+    width: 100% !important;
+  }
+  .padding1 {
+    padding: 0px !important;
+  }
+  .padding2 {
+    padding: 10px 0px !important;
+  }
+  /* Safari 6.1+ */
+  div#resOrder1 {
+    -webkit-order: 1;
+  }
+  div#resOrder2 {
+    -webkit-order: 2;
+  }
+  div#resOrder3 {
+    -webkit-order: 3;
+  }
+  div#resOrder4 {
+    -webkit-order: 4;
+  }
+  div#resOrder5 {
+    -webkit-order: 5;
+  }
+
+  /* Standard syntax */
+  div#resOrder1 {
+    order: 1;
+  }
+  div#resOrder2 {
+    order: 2;
+  }
+  div#resOrder3 {
+    order: 3;
+  }
+  div#resOrder4 {
+    order: 4;
+  }
+  div#resOrder5 {
+    order: 5;
   }
 }

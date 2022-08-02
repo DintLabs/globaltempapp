@@ -1,0 +1,14 @@
+.centerMode {
+  display: grid;
+  place-items: center;
+}
+.textCenter {
+  text-align: center;
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  place-items: center;
+  margin: 0 auto;
+  grid-gap: 10px;
+}
