@@ -4,12 +4,13 @@ import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
 import FileUpload from "react-material-file-upload";
 import { styled } from "@mui/material/styles";
-import { Box, TextField, Button, Card, Typography, Alert,  } from "@mui/material";
-
+import { Box, TextField, Button, Card, Typography, Alert } from "@mui/material";
+import "./Product.css";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { dbReal, auth, storage } from "firebase";
 import { ref, update } from "firebase/database";
 import { uploadBytes, ref as refStorage } from "firebase/storage";
+import ProductCard from "./ProductCard";
 
 const Wrapper = styled(Box)(() => ({
   width: "100%",
@@ -96,7 +97,10 @@ const AddProduct = () => {
 
   return (
     <Wrapper>
-      <Content>
+      <div style={{ height: "100vh" }}>
+        <ProductCard />
+      </div>
+      {/* <Content>
         <form onSubmit={handleSubmit}>
           <Title>Create Product</Title>
 
@@ -176,7 +180,7 @@ const AddProduct = () => {
             Submit
           </Button>
         </form>
-      </Content>
+      </Content> */}
     </Wrapper>
   );
 };

@@ -1,0 +1,27 @@
+.centerMode {
+  display: grid;
+  place-items: center;
+}
+.sub1_Form_steps {
+  padding: 10px 140px;
+}
+.space_between {
+  display: flex;
+  justify-content: space-between;
+}
+.marTop10 {
+  margin-top: 10px;
+}
+.labelFont {
+  font-size: 14px;
+  font-weight: 700;
+}
+.input {
+  padding: 7px 0px;
+}
+@media (min-width: 1024px) {
+  .min-height {
+    min-height: calc(70vh - 140px);
+    background-color: white;
+  }
+}

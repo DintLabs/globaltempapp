@@ -38,18 +38,18 @@ const ClientDetails = () => {
     <div className="fontSize css-apenfw-MuiContainer-root">
       <div
         style={{
-          display: "flex",
           padding: "15px",
-          justifyContent: "space-between",
         }}
+        className="space_between main"
       >
         <div
           style={{
             width: "28.5%",
             padding: "10px",
           }}
+          className="fullWidth padding1"
         >
-          <div className="divLeft 1">
+          <div className="divLeft 1" id="resOrder2">
             <h4>Your booking details</h4>
             <div className="flex marTop notFlex">
               <div className="checkOutD" style={{ position: "relative" }}>
@@ -104,7 +104,7 @@ const ClientDetails = () => {
 
           {open == false ? (
             <>
-              <div className="divLeft 2 marTop bg">
+              <div className="divLeft 2 marTop bg" id="resOrder3">
                 <div className="padding">
                   <h4 className="space_between">
                     <span>Price</span>
@@ -251,12 +251,20 @@ const ClientDetails = () => {
             </div>
           </div>
         </div>
-        <div style={{ width: "68.5%", padding: "10px" }}>
-          <div className="divRight 1 space_between">
-            <div style={{ width: "20%" }}>
-              <img src={(imgSrc && imgSrc[0]) || ""} alt="image" width="100%" />
+        <div
+          style={{ width: "68.5%", padding: "10px" }}
+          className="fullWidth padding2"
+        >
+          <div className="divRight 1 space_between img" id="resOrder1">
+            <div style={{ width: "20%" }} className="imgDiv">
+              <img
+                src={(imgSrc && imgSrc[0]) || ""}
+                alt="image"
+                className="logoImg"
+                width="100%"
+              />
             </div>
-            <div style={{ width: "78%" }}>
+            <div style={{ width: "78%" }} className="content1Right marTop10">
               <div style={{ display: "flex", gap: "2%" }}>
                 <span
                   style={{
@@ -304,7 +312,7 @@ const ClientDetails = () => {
               </div>
             </div>
           </div>
-          <div className="divRight 2 marTop">
+          <div className="divRight 2 marTop" id="resOrder4">
             <h4 className="font23dark">Good to know:</h4>
             <div style={{ display: "flex" }} className="marTop">
               <span style={{ marginRight: "2%" }}>

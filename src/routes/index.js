@@ -7,6 +7,8 @@ import { Login, Register, Account } from "pages/auth";
 import ProductDetail from "pages/products/ProductDetail";
 import Book from "pages/products/Book";
 import ClientDetails from "pages/booking/ClientDetails";
+import MainForm from "pages/products/multipleForm/MainForm";
+import NameLocation from "pages/products/multipleForm/nameLocation/NameLocation";
 
 const routes = [
   {
@@ -52,6 +54,14 @@ const routes = [
   {
     path: "ClientDetails/:id",
     element: <ClientDetails />,
+  },
+  {
+    path: "multipleForm",
+    element: <MainForm />,
+  },
+  {
+    path: "nameLocation",
+    element: <NameLocation />,
   },
 ];
 
